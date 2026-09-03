@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Arquitectura de automatización asistida por IA</title>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, securityLevel: 'strict', theme: 'base', themeVariables: {
+    fontFamily: 'Aptos, Segoe UI, sans-serif', primaryColor: '#e8f1fb', primaryTextColor: '#14283d', primaryBorderColor: '#2d6a9f', lineColor: '#58758f', secondaryColor: '#eef6f0', tertiaryColor: '#fff7e8', clusterBkg: '#f7fafc', clusterBorder: '#9db2c4'
+  }});
+</script>
+<style>
+  @page { size: A3 landscape; margin: 10mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; color: #172b3a; background: #eef2f5; font-family: Aptos, "Segoe UI", sans-serif; }
+  .page { width: 100%; min-height: 180mm; margin: 0 auto 14px; padding: 12mm; background: white; page-break-after: always; display: flex; flex-direction: column; }
+  .page:last-child { page-break-after: auto; }
+  h1 { margin: 0 0 4px; color: #123b5d; font-size: 25px; }
+  h2 { margin: 0 0 8px; color: #1e5a83; font-size: 18px; font-weight: 600; }
+  .subtitle { margin: 0 0 10px; color: #557084; font-size: 11px; }
+  .diagram { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 135mm; overflow: auto; }
+  .mermaid { width: 100%; text-align: center; }
+  .mermaid svg { max-width: 100%; max-height: 145mm; height: auto; }
+  .note { margin-top: 6px; padding: 7px 10px; border-left: 4px solid #2d6a9f; background: #f2f7fb; color: #40596b; font-size: 10px; }
+  @media screen { .page { max-width: 1600px; box-shadow: 0 2px 14px #c7d0d8; } }
+  @media screen {
+    body { padding: 20px; }
+    .page { min-height: calc(100vh - 100px); margin-bottom: 0; visibility: hidden; position: absolute; left: -10000px; top: 0; }
+    .page.active { visibility: visible; position: relative; left: auto; top: auto; }
+    .diagram { min-height: 0; align-items: flex-start; justify-content: flex-start; }
+    .diagram { cursor: grab; user-select: none; }
+    .diagram.dragging { cursor: grabbing; }
+    .mermaid { min-width: 100%; }
+    .mermaid svg { max-width: none; max-height: none; width: 100%; height: auto; transform-origin: top left; }
+    .zoom-controls { max-width: 1600px; margin: 0 auto 8px; display: flex; align-items: center; gap: 6px; }
+    .zoom-controls button { width: 34px; height: 30px; border: 1px solid #2d6a9f; border-radius: 4px; background: #e8f1fb; color: #123b5d; cursor: pointer; font: 600 16px/1 inherit; }
+    .zoom-controls button.reset { width: 58px; font-size: 11px; }
+    .zoom-level { min-width: 48px; color: #557084; font-size: 12px; text-align: center; }
+    .page:nth-of-type(4) .diagram { overflow-x: auto; overflow-y: auto; }
+    .page:nth-of-type(4) .mermaid { width: max-content; min-width: 2200px; }
+    .page:nth-of-type(4) .mermaid svg { width: 2200px; }
+    .navigation { max-width: 1600px; margin: 0 auto 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .navigation button { border: 1px solid #2d6a9f; border-radius: 4px; padding: 8px 14px; background: #e8f1fb; color: #123b5d; cursor: pointer; font: inherit; }
+    .navigation button:disabled { opacity: .45; cursor: default; }
+    .counter { color: #557084; font-size: 12px; }
+  }
+  @media print {
+    .navigation { display: none; }
+    .page { height: 100vh; min-height: 0; margin: 0; break-after: page; }
+    .page:last-child { break-after: auto; }
+  }
+</style>
+</head>
+<body>
+<nav class="navigation" aria-label="Navegación de diagramas">
+  <button id="previous" type="button">Anterior</button>
+  <span class="counter" id="counter">Diagrama 1 de 4</span>
+  <button id="next" type="button">Siguiente</button>
+</nav>
+<div class="zoom-controls" aria-label="Controles de zoom">
+  <button id="zoom-out" type="button" title="Alejar">−</button>
+  <button id="zoom-in" type="button" title="Acercar">+</button>
+  <button id="zoom-reset" class="reset" type="button" title="Restablecer zoom">100 %</button>
+  <span class="zoom-level" id="zoom-level">100 %</span>
+</div>
+<section class="page">
+  <h1>Arquitectura de automatización asistida por IA</h1>
+  <h2>1. Funcionamiento de la IA y relación con el repositorio</h2>
+  <p class="subtitle">Copilot ayuda a desarrollar y mantener las herramientas; las aplicaciones ejecutan los procesos empresariales.</p>
+  <div class="diagram"><pre class="mermaid">
+flowchart LR
+    U[Desarrollador] --> O[Agente orquestador]
+    O --> CTX[Consulta contexto]
+    CTX --> INS[Instrucciones .github]
+    CTX --> REP[Repositorio]
+    CTX --> MEM[Memoria relevante]
+    CTX --> DOC[Documentación]
+    O --> SEL[Analiza requerimiento y selecciona agente]
+    SEL --> AC[Agente C# / AutoCAD]
+    SEL --> AL[Agente AutoLISP]
+    SEL --> EV[Agente Excel / VBA]
+    SEL --> AP[Agente Python]
+    SEL --> QA[Agente QA]
+    subgraph R[Componentes del repositorio]
+      CAD[Plugins AutoCAD]
+      LISP[Rutinas AutoLISP]
+      EXCEL[Macros y herramientas Excel]
+      PYTHON[Aplicaciones Python]
+      LIB[Bibliotecas compartidas]
+      TEST[Pruebas y validaciones]
+    end
+    AC --> CAD
+    AC --> LIB
+    AC --> TEST
+    AL --> LISP
+    AL --> TEST
+    EV --> EXCEL
+    EV --> LIB
+    EV --> TEST
+    AP --> PYTHON
+    AP --> LIB
+    AP --> TEST
+    QA --> TEST
+    QA --> CAD
+    QA --> LISP
+    QA --> EXCEL
+    QA --> PYTHON
+    CAD --> RES[Resultados del desarrollo]
+    LISP --> RES
+    EXCEL --> RES
+    PYTHON --> RES
+    TEST --> RES
+    RES --> REV[Revisión humana]
+    REV --> GH[Pull Request e integración en GitHub]
+  </pre></div>
+  <div class="note">La IA no sustituye las reglas técnicas: ayuda a crear código, pruebas y documentación. El software versionado realiza los cálculos y automatizaciones.</div>
+</section>
+<section class="page">
+  <h1>Arquitectura de automatización asistida por IA</h1>
+  <h2>2. Organización del repositorio</h2>
+  <p class="subtitle">Un repositorio corporativo puede contener aplicaciones independientes, reglas comunes, bibliotecas reutilizables y validaciones.</p>
+  <div class="diagram"><pre class="mermaid">
+flowchart LR
+    G[Repositorio GitHub] --> GH[.github]
+    G --> APPS[apps]
+    G --> LIBS[libraries]
+    G --> TESTS[tests]
+    G --> DOCS[docs]
+    G --> MEMORY[memory]
+    G --> VSCODE[.vscode]
+    subgraph CONFIG[Configuración de Copilot]
+      CI[copilot-instructions.md]
+      AG[agents]
+      IN[instructions]
+      PR[prompts]
+    end
+    subgraph APPLICATIONS[Aplicaciones independientes]
+      CAD[autocad-tools]
+      XLS[excel-tools]
+      LIS[lisp-tools]
+      PY[python-tools]
+    end
+    subgraph SHARED[Bibliotecas compartidas]
+      DOMAIN[Reglas de negocio]
+      MODELS[Modelos de datos]
+      UTILS[Utilidades comunes]
+      EXPORT[Exportadores]
+    end
+    subgraph VALIDATION[Pruebas y validaciones]
+      UNIT[Unitarias]
+      INT[Integración]
+      REG[Regresión]
+      PERF[Rendimiento]
+    end
+    subgraph DOCUMENTATION[Documentación]
+      ARCH[Arquitectura]
+      DEC[Decisiones técnicas]
+      INST[Instalación]
+      RULES[Reglas de negocio]
+    end
+    subgraph MEMORIES[Memoria del proyecto]
+      GLOBAL[Memoria técnica general]
+      DOMAINMEM[Memoria por dominio]
+      APPMEM[Memoria por aplicación]
+    end
+    CAD --> DOMAIN
+    XLS --> DOMAIN
+    PY --> DOMAIN
+    CAD --> TESTS
+    XLS --> TESTS
+    LIS --> TESTS
+    PY --> TESTS
+    CI --> AG
+    AG --> IN
+    IN --> PR
+  </pre></div>
+  <div class="note">Compartir repositorio no obliga a conectar técnicamente las aplicaciones. Una macro Excel puede permanecer independiente de AutoCAD y Python.</div>
+</section>
+<section class="page">
+  <h1>Arquitectura de automatización asistida por IA</h1>
+  <h2>3. Organización de la memoria</h2>
+  <p class="subtitle">La memoria conserva el estado de cada aplicación y, cuando corresponde, resume conocimiento técnico reutilizable.</p>
+  <div class="diagram"><pre class="mermaid">
+flowchart LR
+    M[Memoria del proyecto] --> G[Memoria global]
+    M --> D[Memoria por dominio]
+    M --> A[Memoria por aplicación]
+    M --> H[Historial y estado]
+    subgraph GLOBALMEM[Memoria técnica general]
+      GC[Patrones reutilizables]
+      GR[Reglas comunes]
+      GV[Validaciones comunes]
+      GG[Glosario]
+    end
+    subgraph DOMAINMEM[Memoria por dominio]
+      DA[AutoCAD]
+      DE[Excel y VBA]
+      DL[AutoLISP]
+      DP[Python]
+      DC[C#]
+      DEL[Reglas eléctricas]
+    end
+    subgraph APPMEM[Memoria específica de cada aplicación]
+      AS[Estado actual]
+      AF[Funcionalidades]
+      APEND[Pendientes]
+      AD[Dependencias]
+      AE[Errores conocidos]
+      AV[Versiones compatibles]
+    end
+    subgraph HISTORY[Historial y documentación]
+      CH[CHANGELOG.md]
+      DEC[Decisiones técnicas]
+      LOG[Logs de ejecución]
+      TEST[Resultados de pruebas]
+    end
+    DEV[Desarrollo o actualización] --> AS
+    DEV --> CH
+    DEV --> DEC
+    DEV --> TEST
+    AS --> CONT[Contexto para futuras versiones]
+    CH --> CONT
+    DEC --> CONT
+    TEST --> CONT
+    CONT --> REU{¿Conocimiento reutilizable?}
+    REU -->|Sí| GC
+    REU -->|Sí| GR
+    REU -->|No| KEEP[Permanece en la aplicación]
+    AS --> KEEP
+    KEEP --> CONT
+    D --> LOAD[Carga selectiva según la tarea]
+    A --> LOAD
+    G --> LOAD
+  </pre></div>
+  <div class="note">El estado, historial y decisiones de una aplicación se conservan para futuras versiones. Solo los patrones generales se resumen además en la memoria técnica global.</div>
+</section>
+<section class="page">
+  <h1>Arquitectura de automatización asistida por IA</h1>
+  <h2>4. Flujo integrado completo</h2>
+  <p class="subtitle">Desde un requerimiento hasta la integración en GitHub y la actualización de la memoria del desarrollo.</p>
+  <div class="diagram"><pre class="mermaid">
+flowchart LR
+    R[Requerimiento] --> C[Copilot recibe solicitud]
+    subgraph CONTEXTO[1. Recuperación de contexto]
+      C --> I[Lee instrucciones generales]
+      I --> RP[Analiza repositorio]
+      RP --> RA[Revisa aplicaciones existentes]
+      RA --> RC[Revisa código y pruebas]
+      RC --> RD[Revisa documentación]
+      RD --> RM[Recupera memoria relevante]
+      RM --> RS[Lee estado de la aplicación]
+    end
+    subgraph ANALISIS[2. Análisis y decisión]
+      RS --> A[Analiza objetivo y restricciones]
+      A --> T[Identifica tipo de desarrollo]
+      T --> TEC[Propone tecnología]
+      TEC --> AG[Selecciona agente especialista]
+      AG --> ALC[Define alcance, archivos y pruebas]
+      ALC --> CONF{¿Usuario confirma?}
+    end
+    CONF -->|No| AJ[Ajustar requerimiento o alcance]
+    AJ --> A
+    CONF -->|Sí| RAMA[Crear rama de trabajo]
+    subgraph ESTRUCTURA[3. Preparación]
+      RAMA --> NUEVO{¿Nueva aplicación?}
+      NUEVO -->|Sí| UB[Determinar ubicación]
+      UB --> CARP[Crear carpeta y estructura estándar]
+      CARP --> BASE[Crear README, memoria y pruebas base]
+      NUEVO -->|No| EXIST[Conservar estructura existente]
+    end
+    BASE --> DES
+    EXIST --> DES
+    subgraph DESARROLLO[4. Implementación]
+      DES[Agente especialista trabaja]
+      DES --> COD[Crear o modificar código]
+      COD --> COMP[Usar bibliotecas compartidas si corresponde]
+      COMP --> TEST[Crear o actualizar pruebas]
+      TEST --> VAL[Ejecutar pruebas y validaciones]
+    end
+    VAL --> OK{¿Resultados correctos?}
+    OK -->|No| ERROR[Analizar errores y corregir]
+    ERROR --> COD
+    OK -->|Sí| REV[Revisión humana]
+    REV --> APROB{¿Cambio aprobado?}
+    APROB -->|No| OBS[Registrar observaciones]
+    OBS --> COD
+    APROB -->|Sí| VERSION[Actualizar versión y CHANGELOG]
+    subgraph MEMORIA[5. Registro del desarrollo]
+      VERSION --> EST[Actualizar estado de la aplicación]
+      EST --> FUNC[Registrar funcionalidades]
+      FUNC --> PEND[Registrar pendientes]
+      PEND --> DEP[Registrar dependencias y compatibilidad]
+      DEP --> INC[Registrar errores conocidos]
+      INC --> PRUEBAS[Registrar pruebas realizadas]
+      PRUEBAS --> DECIDE{¿Conocimiento reutilizable?}
+    end
+    DECIDE -->|No| LOCAL[Conservar información en la aplicación]
+    DECIDE -->|Sí| TECNICA[Resumir en memoria técnica general]
+    LOCAL --> PR[Crear Pull Request]
+    TECNICA --> PR
+    PR --> REVIEW[Revisión del equipo]
+    REVIEW --> MERGE[Integrar en rama principal]
+    MERGE --> FUTURO[Aplicación lista para futuras actualizaciones]
+  </pre></div>
+  <div class="note">La memoria de la aplicación se actualiza siempre al terminar un desarrollo. La memoria técnica general recibe únicamente conocimiento que pueda servir a otras herramientas o proyectos.</div>
+</section>
+<script>
+  const pages = [...document.querySelectorAll('.page')];
+  const previous = document.querySelector('#previous');
+  const next = document.querySelector('#next');
+  const counter = document.querySelector('#counter');
+  const zoomOut = document.querySelector('#zoom-out');
+  const zoomIn = document.querySelector('#zoom-in');
+  const zoomReset = document.querySelector('#zoom-reset');
+  const zoomLevel = document.querySelector('#zoom-level');
+  let current = 0;
+  let zoom = 1;
+  function applyZoom() {
+    const diagram = pages[current].querySelector('.mermaid');
+    const svg = diagram.querySelector('svg');
+    if (!svg) return;
+    svg.style.transform = `scale(${zoom})`;
+    diagram.style.width = `${100 * zoom}%`;
+    zoomLevel.textContent = `${Math.round(zoom * 100)} %`;
+  }
+  function changeZoom(amount) {
+    zoom = Math.max(0.5, Math.min(3, zoom + amount));
+    applyZoom();
+  }
+  let dragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let scrollStartX = 0;
+  let scrollStartY = 0;
+  function currentViewport() { return pages[current].querySelector('.diagram'); }
+  function setZoomFromWheel(event) {
+    event.preventDefault();
+    changeZoom(event.deltaY < 0 ? 0.15 : -0.15);
+  }
+  function startDrag(event) {
+    if (event.button !== 0) return;
+    const viewport = currentViewport();
+    dragging = true;
+    dragStartX = event.clientX;
+    dragStartY = event.clientY;
+    scrollStartX = viewport.scrollLeft;
+    scrollStartY = viewport.scrollTop;
+    viewport.classList.add('dragging');
+  }
+  function drag(event) {
+    if (!dragging) return;
+    const viewport = currentViewport();
+    viewport.scrollLeft = scrollStartX - (event.clientX - dragStartX);
+    viewport.scrollTop = scrollStartY - (event.clientY - dragStartY);
+  }
+  function endDrag() {
+    dragging = false;
+    currentViewport().classList.remove('dragging');
+  }
+  function showPage(index) {
+    current = Math.max(0, Math.min(index, pages.length - 1));
+    pages.forEach((page, pageIndex) => page.classList.toggle('active', pageIndex === current));
+    counter.textContent = `Diagrama ${current + 1} de ${pages.length}`;
+    previous.disabled = current === 0;
+    next.disabled = current === pages.length - 1;
+    applyZoom();
+  }
+  previous.addEventListener('click', () => showPage(current - 1));
+  next.addEventListener('click', () => showPage(current + 1));
+  zoomOut.addEventListener('click', () => changeZoom(-0.25));
+  zoomIn.addEventListener('click', () => changeZoom(0.25));
+  zoomReset.addEventListener('click', () => { zoom = 1; applyZoom(); });
+  document.querySelectorAll('.diagram').forEach(viewport => {
+    viewport.addEventListener('wheel', setZoomFromWheel, { passive: false });
+    viewport.addEventListener('mousedown', startDrag);
+    viewport.addEventListener('mousemove', drag);
+    viewport.addEventListener('mouseup', endDrag);
+    viewport.addEventListener('mouseleave', endDrag);
+  });
+  window.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft') showPage(current - 1);
+    if (event.key === 'ArrowRight') showPage(current + 1);
+    if (event.key === '+' || event.key === '=') changeZoom(0.25);
+    if (event.key === '-') changeZoom(-0.25);
+  });
+  showPage(0);
+</script>
+</body>
+</html>
